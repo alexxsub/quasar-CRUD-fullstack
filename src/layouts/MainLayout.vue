@@ -29,7 +29,7 @@
         <q-fab
           padding="xs"
           color="primary"
-          @click="DrawerOpen = !DrawerOpen"
+          @click="addItem"
           icon="add"
         />
       </q-toolbar>
@@ -70,8 +70,8 @@
 import EditPhone from 'components/EditPhone.vue'
 import MyTable from 'components/MyTable'
 import {
-  ALL_PHONES_QUERY
-  // ADD_PHONE_MUTATION,
+  ALL_PHONES_QUERY,
+  ADD_PHONE_MUTATION
   // DELETE_PHONE_MUTATION,
   // UPDATE_PHONE_MUTATION
 } from 'src/queries'
@@ -123,14 +123,39 @@ export default {
   },
 
   methods: {
+    addItem () {
+      this.editedItem = this.defaultItem
+      this.DrawerOpen = true
+    },
     editRecord (row) {
-      console.log(row.id)
       this.editedItem = row
       this.DrawerOpen = true
     },
     btnSave () {
-      this.DrawerOpen = false
+      const input = {
+        input: this.editedItem
+      }
 
+      this.$apollo
+        .mutate({
+          mutation: ADD_PHONE_MUTATION,
+          variables: input,
+          refetchQueries: [
+            {
+              query: ALL_PHONES_QUERY
+            }
+          ]
+        })
+        .catch(error => {
+          this.$q.notify({
+            message: error.message,
+            color: 'negative',
+            icon: 'error'
+          })
+          return false
+        })
+
+      this.DrawerOpen = false
       const message = this.editedItem.id === ''
         ? 'Запись добавлена'
         : 'Запись изменена'

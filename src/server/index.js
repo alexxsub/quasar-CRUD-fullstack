@@ -79,7 +79,7 @@ const typeDefs = gql`
     addPhone(phone: String!, name: String, address: String): Phone!
     addPhoneByInput(input: inputPhone): Phone! #example with input type
     deletePhoneByID(id: ID): [Phone]    
-    updatePhoneByID(id: ID, input: inputPhone): Phone!
+    updatePhoneByID(input: inputPhone): Phone!
   }
 `
 var insertDemoData = function (model, data) {
@@ -180,9 +180,9 @@ const resolvers = {
       })
       return phone
     },
-    updatePhoneByID: async (_, { id, input }, { Phone }) => {
+    updatePhoneByID: async (_, { input }, { Phone }) => {
       const updatedPhone = await Phone.findOneAndUpdate({
-        _id: id
+        _id: input.id
       }, {
         $set: {
           phone: input.phone,

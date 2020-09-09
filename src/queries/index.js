@@ -47,8 +47,8 @@ export const DELETE_PHONE_MUTATION = gql`
 `
 
 export const UPDATE_PHONE_MUTATION = gql`
-  mutation($id: ID!, $input: inputPhone!) {
-    updatePhoneByID(id: $id, input: $input) {
+  mutation($input: inputPhone!) {
+    updatePhoneByID(input: $input) {
       ...Phone
     }
   }
