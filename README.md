@@ -1,6 +1,7 @@
 # <a href='https://www.apollographql.com/'><img src='https://user-images.githubusercontent.com/841294/53402609-b97a2180-39ba-11e9-8100-812bab86357c.png' height='100' alt='Apollo Server'></a>
+# <a href='https://www.quasar.dev/'><img src='https://cdn.quasar.dev/logo/svg/quasar-logo.svg' height='100' alt='Quasar framework'></a>
 
-# Quasar CRUD fullstack APP (phone book)
+# Quasar CRUD fullstack SPA (phone book)
 
 Sample SPA with quasar framework and Apollo/GraphQL/MongoDB backend
 
@@ -15,18 +16,18 @@ npm i
 ```
 ### Install MongoDB
 
-see [manual] (https://docs.mongodb.com/manual/installation/)  
+see manual (https://docs.mongodb.com/manual/installation/)  
 
 
 ### Start backend 
-app configured without login and password to MogoDB
+app configured without login and password to MongoDB
 
 ```bash
 npm run server
 ```
 open url in browser to GraphQL playground [http://localhost:4000/graphql](http://localhost:4000/graphql)
 
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
+### Start the SPA WEB interface in development mode (hot-code reloading, error reporting, etc.)
 ```bash
 quasar dev
 ```
