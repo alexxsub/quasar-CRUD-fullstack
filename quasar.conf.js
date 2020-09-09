@@ -19,7 +19,6 @@ module.exports = function (/* ctx */) {
     // --> boot files are part of "main.js"
     // https://quasar.dev/quasar-cli/boot-files
     boot: [
-
       'i18n'
     ],
 
@@ -61,7 +60,22 @@ module.exports = function (/* ctx */) {
 
       // Options below are automatically set depending on the env, set them if you want to override
       // extractCSS: false,
-
+      chainWebpack (chain, {
+        isServer,
+        isClient
+      }) {
+        chain.module.rule('vue')
+          .use('vue-loader')
+          .loader('vue-loader')
+          .tap(options => {
+            options.transpileOptions = {
+              transforms: {
+                dangerousTaggedTemplateString: true
+              }
+            }
+            return options
+          })
+      },
       // https://quasar.dev/quasar-cli/handling-webpack
       extendWebpack (cfg) {
         cfg.module.rules.push({
@@ -99,7 +113,9 @@ module.exports = function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: []
+      plugins: [
+        'Notify'
+      ]
     },
 
     // animations: 'all', // --- includes all animations

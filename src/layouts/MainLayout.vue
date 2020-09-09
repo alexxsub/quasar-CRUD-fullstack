@@ -1,107 +1,169 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="leftDrawerOpen = !leftDrawerOpen"
-        />
-
+      <div class="row no-wrap shadow-1">
+      <q-toolbar text-white  class="col-8">
         <q-toolbar-title>
-          Quasar App
+          Телефонный справочник
         </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
+       <q-input
+       dark
+       dense
+       standout
+       debounce="500"
+        placeholder="Поиск"
+        hide-bottom-space
+       v-model="search"
+       input-class="text-right"
+       class="q-ml-md">
+          <template v-slot:append>
+            <q-icon v-if="search === ''" name="search" />
+            <q-icon v-else name="clear" class="cursor-pointer" @click="search = ''" />
+          </template>
+        </q-input>
+      <q-space />
       </q-toolbar>
+      <q-toolbar class="col-4">
+        <q-space />
+        <q-fab
+          padding="xs"
+          color="primary"
+          @click="DrawerOpen = !DrawerOpen"
+          icon="add"
+        />
+      </q-toolbar>
+      </div>
     </q-header>
 
     <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
+      v-model="DrawerOpen"
+      :width="500"
+      side="right"
       bordered
+      overlay
       content-class="bg-grey-1"
     >
-      <q-list>
-        <q-item-label
-          header
-          class="text-grey-8"
-        >
-          Essential Links
-        </q-item-label>
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
+     <q-toolbar class="bg-grey-2">
+      <q-toolbar-title>{{formTitle}}</q-toolbar-title>
+      <q-btn dense
+      color="secondary"
+      label="Сохранить"
+      icon="save"
+      class="q-mr-sm text-white"
+      @click="btnSave"/>
+    </q-toolbar>
+    <edit-phone :item = "editedItem"></edit-phone>
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+   <!--   <router-view /> -->
+    <my-table
+    :columns="columns"
+    :data="Phones"
+    ></my-table>
     </q-page-container>
   </q-layout>
 </template>
 
 <script>
-import EssentialLink from 'components/EssentialLink.vue'
-
-const linksData = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-]
-
+import EditPhone from 'components/EditPhone.vue'
+import MyTable from 'components/MyTable'
+import {
+  ALL_PHONES_QUERY
+  // ADD_PHONE_MUTATION,
+  // DELETE_PHONE_MUTATION,
+  // UPDATE_PHONE_MUTATION
+} from 'src/queries'
+import bus from '../event-bus'
 export default {
   name: 'MainLayout',
-  components: { EssentialLink },
+  components: { EditPhone, MyTable },
   data () {
     return {
-      leftDrawerOpen: false,
-      essentialLinks: linksData
+      DrawerOpen: false,
+      search: '',
+      editedItem: {
+        id: '',
+        phone: '',
+        name: '',
+        address: ''
+      },
+      defaultItem: {
+        id: '',
+        phone: '',
+        name: '',
+        address: ''
+      },
+      columns: [
+        // описания заголовков столбцов
+        {
+          name: 'phone', // поле в базе
+          required: true, // обязательное
+          label: 'Телефон', // название в интерфейсе
+          align: 'left', // выравнивание
+          field: row => row.phone, // пример вывода из поля таблицы
+          format: val => `${val}`, // пример форматирования значения
+          sortable: true // сортировка
+        },
+        {
+          label: 'Имя',
+          align: 'left',
+          sortable: true,
+          field: 'name',
+          name: 'name'
+        },
+        {
+          name: 'actions',
+          label: '',
+          field: 'actions'
+        }
+      ]
     }
+  },
+
+  methods: {
+    editRecord (row) {
+      console.log(row.id)
+      this.editedItem = row
+      this.DrawerOpen = true
+    },
+    btnSave () {
+      this.DrawerOpen = false
+
+      const message = this.editedItem.id === ''
+        ? 'Запись добавлена'
+        : 'Запись изменена'
+      this.editedItem = this.defaultItem
+      this.$q.notify({
+        message,
+        color: 'positive',
+        icon: 'done'
+      })
+    }
+  },
+  mounted () {
+    // close dialog pressing 'esc'
+    document.addEventListener('keydown', e => {
+      if (e.keyCode === 27) {
+        this.DrawerOpen = false
+      }
+    })
+  },
+  apollo: {
+    Phones: {
+      query: ALL_PHONES_QUERY
+    }
+  },
+  computed: {
+    formTitle () {
+      return this.editedItem.id === ''
+        ? 'Добавить телефон'
+        : 'Исправить телефон'
+    }
+  },
+  created () {
+    bus.$on('editRecord', this.editRecord)
   }
 }
 </script>
