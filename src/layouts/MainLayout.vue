@@ -71,8 +71,8 @@ import EditPhone from 'components/EditPhone.vue'
 import MyTable from 'components/MyTable'
 import {
   ALL_PHONES_QUERY,
-  MODIFY_PHONE
-//  DELETE_PHONE
+  MODIFY_PHONE,
+  DELETE_PHONE
 } from 'src/queries'
 import bus from '../event-bus'
 export default {
@@ -139,7 +139,7 @@ export default {
         focus: 'cancel',
         cancel: true
       }).onOk(() => {
-      /*   this.$apollo.mutate({
+        this.$apollo.mutate({
           mutation: DELETE_PHONE,
           variables: {
             id
@@ -164,7 +164,7 @@ export default {
               color: 'negative',
               icon: 'error'
             })
-          }) */
+          })
       })
     },
     btnSave () {
