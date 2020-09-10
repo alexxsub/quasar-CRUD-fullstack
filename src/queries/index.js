@@ -32,25 +32,16 @@ export const ALL_PHONES_QUERY = gql`
   ${fragment}
 `
 // Описываем запрос на добавление в формате GraphQL
-export const ADD_PHONE_MUTATION = gql`
+export const MODIFY_PHONE = gql`
   mutation($input: inputPhone!) {
-    addPhoneByInput(input: $input) {
+    modifyPhone(input: $input) {
       ...Phone
     }
   }
   ${fragment}
 `
-export const DELETE_PHONE_MUTATION = gql`
+export const DELETE_PHONE = gql`
   mutation($id: ID!) {
-    deletePhoneByID(id: $id)
+    deletePhone(id: $id)
   }
-`
-
-export const UPDATE_PHONE_MUTATION = gql`
-  mutation($input: inputPhone!) {
-    updatePhoneByID(input: $input) {
-      ...Phone
-    }
-  }
-  ${fragment}
 `

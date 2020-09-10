@@ -49,10 +49,7 @@ const typeDefs = gql`
     Search phones
     """
     searchPhones(searchTerm: String): [Phone]
-    """
-    Find name of person in phone list
-    """
-    findName(name: String): Phone
+    
   }
   type Phone {
     id: ID
@@ -70,16 +67,15 @@ const typeDefs = gql`
     address: String
   }
   input inputPhone {
+    id:ID,
     phone: String!
     name: String
     address: String
   }
   type Mutation {
-    loadDemoData: String
-    addPhone(phone: String!, name: String, address: String): Phone!
-    addPhoneByInput(input: inputPhone): Phone! #example with input type
-    deletePhoneByID(id: ID): [Phone]    
-    updatePhoneByID(input: inputPhone): Phone!
+    loadDemoData: String    
+    modifyPhone(input: inputPhone): Phone!
+    deletePhone(id: ID): [Phone]    
   }
 `
 var insertDemoData = function (model, data) {
@@ -150,54 +146,48 @@ const resolvers = {
       } else phones = await Phone.find().limit(50)
 
       return phones
-    },
-    findName: async (_, { name }, { Phone }) =>
-      await Phone.findOne({ name })
+    }
+
   },
   Mutation: {
     loadDemoData: async (_, { }, { Phone }) => {
       return await insertDemoData(Phone, data)
     },
-    addPhone: async (_, { phone, name, address }, { Phone }) => {
-      const newPhone = await new Phone({
-        phone,
-        name,
-        address
-      }).save()
-      return newPhone
-    },
-    addPhoneByInput: async (_, { input }, { Phone }) => {
-      await new Phone({
-        phone: input.phone,
-        name: input.name,
-        address: input.address
-      }).save()
-      return await Phone.find({})
-    },
-    deletePhoneByID: async (_, { id }, { Phone }) => {
-      const phone = await Phone.findByIdAndRemove({
-        _id: id
-      })
-      return phone
-    },
-    updatePhoneByID: async (_, { input }, { Phone }) => {
-      const updatedPhone = await Phone.findOneAndUpdate({
-        _id: input.id
-      }, {
-        $set: {
+
+    modifyPhone: async (_, { input }, { Phone }) => {
+      if (input.id === '') {
+        await new Phone({
           phone: input.phone,
           name: input.name,
           address: input.address
+        }).save()
+        return await Phone.find({})
+      } else {
+        const updatedPhone = await Phone.findOneAndUpdate({
+          _id: input.id
+        }, {
+          $set: {
+            phone: input.phone,
+            name: input.name,
+            address: input.address
+          }
+        }, {
+          new: true
+        },
+        (err, res) => {
+          if (err) console.error(err)
         }
-      }, {
-        new: true
-      },
-      (err, res) => {
-        if (err) console.error(err)
+        )
+        return updatedPhone
       }
-      )
-      return updatedPhone
+    },
+    deletePhone: async (_, { id }, { Phone }) => {
+      const deletedPhone = await Phone.findByIdAndRemove({
+        _id: id
+      })
+      return deletedPhone
     }
+
   }
 }
 // create new Apollo server

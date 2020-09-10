@@ -1,12 +1,12 @@
 <template>
  <div class="q-pa-md" style="max-width: 500px">
-<q-form class="q-gutter-md">
               <q-input
                        square
                        clearable
-                       v-model="this.item.phone"
+                       v-model="editedItem.phone"
                        lazy-rules
                        :rules="[]"
+                       @change = "onChange"
                        label="Телефон">
                 <template v-slot:prepend>
                   <q-icon name="phone" />
@@ -15,9 +15,10 @@
                <q-input
                        square
                        clearable
-                       v-model="this.item.name"
+                       v-model="editedItem.name"
                        lazy-rules
                        :rules="[]"
+                       @change = "onChange"
                        label="Имя">
                 <template v-slot:prepend>
                   <q-icon name="person" />
@@ -26,9 +27,10 @@
               <q-input
                        square
                        clearable
-                       v-model="this.item.address"
+                       v-model="editedItem.address"
                        lazy-rules
                        :rules="[]"
+                       @change = "onChange"
                        type="text"
                        autogrow
                        label="Адрес">
@@ -36,20 +38,37 @@
                   <q-icon name="email" />
                 </template>
               </q-input>
-</q-form>
+
 </div>
 </template>
 
 <script>
+import bus from '../event-bus'
 export default {
   name: 'EditPhone',
-  props: {
-    item: {
-      type: Object,
-      default: function () {
-        return { phone: '', name: '', address: '' }
+  data () {
+    return {
+      editedItem: {
+        id: '',
+        phone: '',
+        name: '',
+        address: ''
       }
     }
+  },
+  methods: {
+    onChange () {
+      this.$emit('edited', this.editedItem)
+    },
+    setEditedItem (item) {
+      this.editedItem.phone = item.phone
+      this.editedItem.name = item.name
+      this.editedItem.address = item.address
+    }
+  },
+  created () {
+    // fire onClick record of table
+    bus.$on('editRecord', this.setEditedItem)
   }
 }
 </script>

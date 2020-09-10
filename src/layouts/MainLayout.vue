@@ -37,7 +37,7 @@
     </q-header>
 
     <q-drawer
-      v-model="DrawerOpen"
+      v-model="drawerOpen"
       :width="500"
       side="right"
       bordered
@@ -53,7 +53,7 @@
       class="q-mr-sm text-white"
       @click="btnSave"/>
     </q-toolbar>
-    <edit-phone :item = "editedItem"></edit-phone>
+    <edit-phone @edited="onEdited"></edit-phone>
     </q-drawer>
 
     <q-page-container>
@@ -71,9 +71,8 @@ import EditPhone from 'components/EditPhone.vue'
 import MyTable from 'components/MyTable'
 import {
   ALL_PHONES_QUERY,
-  ADD_PHONE_MUTATION
-  // DELETE_PHONE_MUTATION,
-  // UPDATE_PHONE_MUTATION
+  MODIFY_PHONE
+//  DELETE_PHONE
 } from 'src/queries'
 import bus from '../event-bus'
 export default {
@@ -81,7 +80,7 @@ export default {
   components: { EditPhone, MyTable },
   data () {
     return {
-      DrawerOpen: false,
+      drawerOpen: false,
       search: '',
       editedItem: {
         id: '',
@@ -96,15 +95,14 @@ export default {
         address: ''
       },
       columns: [
-        // описания заголовков столбцов
+        // description columns
         {
-          name: 'phone', // поле в базе
-          required: true, // обязательное
-          label: 'Телефон', // название в интерфейсе
-          align: 'left', // выравнивание
-          field: row => row.phone, // пример вывода из поля таблицы
-          format: val => `${val}`, // пример форматирования значения
-          sortable: true // сортировка
+          name: 'phone', // key
+          label: 'Телефон', // head label of column
+          align: 'left',
+          field: row => row.phone, // field in DB, simple like <field: 'phone'>
+          format: val => `${val}`, // change value
+          sortable: true // sortable
         },
         {
           label: 'Имя',
@@ -123,22 +121,59 @@ export default {
   },
 
   methods: {
+    onEdited (item) {
+      this.editedItem = item
+    },
     addItem () {
       this.editedItem = this.defaultItem
-      this.DrawerOpen = true
+      this.drawerOpen = true
     },
     editRecord (row) {
       this.editedItem = row
-      this.DrawerOpen = true
+      this.drawerOpen = true
+    },
+    deleteRecord (id) {
+      this.$q.dialog({
+        title: 'Внимание!',
+        message: 'Удалить запись?',
+        focus: 'cancel',
+        cancel: true
+      }).onOk(() => {
+      /*   this.$apollo.mutate({
+          mutation: DELETE_PHONE,
+          variables: {
+            id
+          },
+          refetchQueries: [
+            {
+              query: ALL_PHONES_QUERY
+            }
+          ]
+        })
+          .then(data => {
+            this.$q.notify({
+              message: 'Запись удалена',
+              color: 'positive',
+              icon: 'done'
+
+            })
+          })
+          .catch(error => {
+            this.$q.notify({
+              message: error.message,
+              color: 'negative',
+              icon: 'error'
+            })
+          }) */
+      })
     },
     btnSave () {
       const input = {
         input: this.editedItem
       }
-
       this.$apollo
         .mutate({
-          mutation: ADD_PHONE_MUTATION,
+          mutation: MODIFY_PHONE,
           variables: input,
           refetchQueries: [
             {
@@ -146,32 +181,33 @@ export default {
             }
           ]
         })
+        .then(data => {
+          this.drawerOpen = false
+          const message = this.editedItem.id === ''
+            ? 'Запись добавлена'
+            : 'Запись изменена'
+          this.editedItem = this.defaultItem
+          this.$q.notify({
+            message,
+            color: 'positive',
+            icon: 'done'
+
+          })
+        })
         .catch(error => {
           this.$q.notify({
             message: error.message,
             color: 'negative',
             icon: 'error'
           })
-          return false
         })
-
-      this.DrawerOpen = false
-      const message = this.editedItem.id === ''
-        ? 'Запись добавлена'
-        : 'Запись изменена'
-      this.editedItem = this.defaultItem
-      this.$q.notify({
-        message,
-        color: 'positive',
-        icon: 'done'
-      })
     }
   },
   mounted () {
     // close dialog pressing 'esc'
     document.addEventListener('keydown', e => {
       if (e.keyCode === 27) {
-        this.DrawerOpen = false
+        this.drawerOpen = false
       }
     })
   },
@@ -183,12 +219,13 @@ export default {
   computed: {
     formTitle () {
       return this.editedItem.id === ''
-        ? 'Добавить телефон'
-        : 'Исправить телефон'
+        ? 'Добавить запись'
+        : 'Исправить запись'
     }
   },
   created () {
     bus.$on('editRecord', this.editRecord)
+    bus.$on('deleteRecord', this.deleteRecord)
   }
 }
 </script>

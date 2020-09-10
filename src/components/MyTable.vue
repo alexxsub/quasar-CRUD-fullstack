@@ -1,14 +1,14 @@
 <template>
 <q-layout view="lhh LpR lff" container style="height: 1080px" class="shadow-1 rounded-borders">
-
      <q-table
       :data="data"
       :columns="columns"
       row-key="name"
       :pagination.sync="pagination"
-      hide-pagination
+
       :loading="loading"
       no-data-label="Нет данных."
+      no-results-label = "Нет результатов для отображения."
     >
     <template v-slot:body="props">
     <q-tr :props="props">
@@ -40,16 +40,24 @@
 import bus from '../event-bus'
 export default {
   name: 'MyTable',
-  data: () => ({
-    loading: false,
-    pagination: {
-      sortBy: 'desc',
-      descending: false,
-      page: 2,
-      rowsPerPage: 5,
-      rowsNumber: 10
+  data () {
+    return {
+      loading: false,
+      editedItem: {
+        id: '',
+        phone: '',
+        name: '',
+        address: ''
+      },
+      pagination: {
+        sortBy: 'desc',
+        descending: false,
+        page: 2,
+        rowsPerPage: 10,
+        rowsNumber: 20
+      }
     }
-  }),
+  },
   computed: {
     rowsNumber () {
       return this.data.length
@@ -60,15 +68,15 @@ export default {
   },
   methods: {
     editItem (row) {
-      console.log(1)
-      bus.$emit('editRecord', row)
+      this.editedItem.id = row.id
+      this.editedItem.phone = row.phone
+      this.editedItem.name = row.name
+      this.editedItem.address = row.address
+
+      bus.$emit('editRecord', this.editedItem)
     },
     deleteItem (row) {
-      this.$q.notify({
-        message: 'Запись удалена!',
-        color: 'negative',
-        icon: 'done'
-      })
+      bus.$emit('deleteRecord', row.id)
     }
   },
 
