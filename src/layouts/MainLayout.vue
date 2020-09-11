@@ -29,6 +29,7 @@
         <q-fab
           padding="xs"
           color="primary"
+          v-model = "drawerOpen"
           @click="addItem"
           icon="add"
         />
@@ -121,15 +122,18 @@ export default {
   },
 
   methods: {
+    resetEditedItem () {
+      this.editedItem = Object.assign({}, this.defaultItem)
+      bus.$emit('resetRecord', this.defaultItem)
+    },
     onEdited (item) {
-      this.editedItem = item
+      this.editedItem = Object.assign({}, item)
     },
     addItem () {
-      this.editedItem = this.defaultItem
-      this.drawerOpen = true
+      this.resetEditedItem()
     },
     editRecord (row) {
-      this.editedItem = row
+      this.editedItem = Object.assign({}, row)
       this.drawerOpen = true
     },
     deleteRecord (id) {
@@ -137,7 +141,8 @@ export default {
         title: 'Внимание!',
         message: 'Удалить запись?',
         focus: 'cancel',
-        cancel: true
+        ok: 'Да, я уверен',
+        cancel: 'Нет, не нужно'
       }).onOk(() => {
         this.$apollo.mutate({
           mutation: DELETE_PHONE,
@@ -208,6 +213,7 @@ export default {
     document.addEventListener('keydown', e => {
       if (e.keyCode === 27) {
         this.drawerOpen = false
+        this.resetEditedItem()
       }
     })
   },

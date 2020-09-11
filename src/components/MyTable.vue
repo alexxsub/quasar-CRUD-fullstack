@@ -5,13 +5,24 @@
       :columns="columns"
       row-key="name"
       :pagination.sync="pagination"
-
       :loading="loading"
+      hide-pagination
       no-data-label="Нет данных."
       no-results-label = "Нет результатов для отображения."
     >
+     <template v-slot:header="props">
+        <q-tr :props="props">
+          <q-th
+            v-for="col in props.cols"
+            :key="col.name"
+            :props="props"
+          >
+            {{ col.label }}
+          </q-th>
+        </q-tr>
+      </template>
     <template v-slot:body="props">
-    <q-tr :props="props">
+    <q-tr :props="props" @click="props.expand = !props.expand">
          <q-td key="phone" :props="props">
              <a href="#" @click="editItem(props.row)"> {{ props.row.phone }}</a>
         </q-td>
@@ -22,6 +33,11 @@
               <q-btn size="sm" color="red" round icon="delete" @click="deleteItem(props.row)"></q-btn>
             </q-td>
          </q-tr>
+         <q-tr v-show="props.expand" :props="props">
+          <q-td colspan="100%">
+            <div class="text-left">{{ props.row.address }}.</div>
+          </q-td>
+        </q-tr>
     </template>
 
     </q-table>
@@ -53,8 +69,8 @@ export default {
         sortBy: 'desc',
         descending: false,
         page: 2,
-        rowsPerPage: 10,
-        rowsNumber: 20
+        rowsPerPage: 5,
+        rowsNumber: this.rowsNumber
       }
     }
   },

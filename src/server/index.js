@@ -75,7 +75,7 @@ const typeDefs = gql`
   type Mutation {
     loadDemoData: String    
     modifyPhone(input: inputPhone): Phone!
-    deletePhone(id: ID): [Phone]    
+    deletePhone(id: ID): Phone
   }
 `
 var insertDemoData = function (model, data) {

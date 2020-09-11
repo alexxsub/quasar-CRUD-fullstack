@@ -61,14 +61,19 @@ export default {
       this.$emit('edited', this.editedItem)
     },
     setEditedItem (item) {
+      this.editedItem.id = item.id
       this.editedItem.phone = item.phone
       this.editedItem.name = item.name
       this.editedItem.address = item.address
+    },
+    resetEditedItem (item) {
+      this.editedItem = Object.assign({}, item)
     }
   },
   created () {
     // fire onClick record of table
     bus.$on('editRecord', this.setEditedItem)
+    bus.$on('resetRecord', this.resetEditedItem)
   }
 }
 </script>
