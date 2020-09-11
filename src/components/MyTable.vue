@@ -85,11 +85,8 @@ export default {
   },
   methods: {
     editItem (row) {
-      this.editedItem.id = row.id
-      this.editedItem.phone = row.phone
-      this.editedItem.name = row.name
-      this.editedItem.address = row.address
-
+      event.stopPropagation()
+      this.editedItem = Object.assign({}, row)
       bus.$emit('editRecord', this.editedItem)
     },
     deleteItem (row) {
