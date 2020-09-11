@@ -1,5 +1,19 @@
 <template>
 <q-layout view="lhh LpR lff" container style="height: 1080px" class="shadow-1 rounded-borders">
+    <div class="row justify-center q-mt-md">
+      <q-input
+      v-model.number="pagination.rowsPerPage"
+      type="number"
+      dense
+      style="max-width: 50px"
+    />
+      <q-pagination
+        v-model="pagination.page"
+        :max="pagesNumber"
+        :boundary-numbers="true"
+        size="md">
+      </q-pagination>
+     </div>
      <q-table
       :data="data"
       :columns="columns"
@@ -42,14 +56,6 @@
     </template>
 
     </q-table>
-     <div class="row justify-center q-mt-md">
-      <q-pagination
-        v-model="pagination.page"
-        color="grey-8"
-        :max="pagesNumber"
-        size="md">
-      </q-pagination>
-     </div>
   </q-layout>
 </template>
 
@@ -69,7 +75,7 @@ export default {
       pagination: {
         sortBy: 'desc',
         descending: false,
-        page: 2,
+        page: 1,
         rowsPerPage: 5,
         rowsNumber: this.rowsNumber
       }
