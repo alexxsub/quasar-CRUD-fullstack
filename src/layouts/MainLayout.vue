@@ -62,6 +62,7 @@
     <my-table
     :columns="columns"
     :data="Phones"
+    :filter="search"
     ></my-table>
     </q-page-container>
   </q-layout>

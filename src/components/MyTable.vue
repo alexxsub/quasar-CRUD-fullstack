@@ -4,6 +4,7 @@
       :data="data"
       :columns="columns"
       row-key="name"
+      :filter="filter"
       :pagination.sync="pagination"
       :loading="loading"
       hide-pagination
@@ -97,7 +98,10 @@ export default {
   },
 
   props: {
-
+    filter: {
+      type: String,
+      default: ''
+    },
     data: {
       type: Array,
       default: () => []
