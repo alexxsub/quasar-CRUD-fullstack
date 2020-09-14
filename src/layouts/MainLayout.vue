@@ -235,4 +235,5 @@ export default {
     bus.$on('deleteRecord', this.deleteRecord)
   }
 }
+// https://forum.quasar-framework.org/topic/3996/how-to-use-data-from-apollo-client-as-data-source-of-qtable
 </script>
