@@ -141,9 +141,9 @@ const resolvers = {
               $meta: 'textScore'
             }
           })
-          .limit(50)
+        //  .limit(50)
         // .sort({ <field>: "desc" });
-      } else phones = await Phone.find().limit(50)
+      } else phones = await Phone.find()// .limit(50)
 
       return phones
     }

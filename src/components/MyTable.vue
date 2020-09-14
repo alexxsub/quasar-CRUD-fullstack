@@ -96,6 +96,7 @@ export default {
       bus.$emit('editRecord', this.editedItem)
     },
     deleteItem (row) {
+      event.stopPropagation()
       bus.$emit('deleteRecord', row.id)
     }
   },
