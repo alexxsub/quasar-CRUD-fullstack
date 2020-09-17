@@ -78,11 +78,13 @@ const typeDefs = gql`
     "Load demo data"
     loadDemoData: String
     "If id='' then add phone, else update"
-    modifyPhone(input: inputPhone): Phone!
+    modifyPhone(input: inputPhone): Phone
     deletePhone(id: ID): Phone
   }
   type Subscription {
-    addedPhone: Phone
+    addedPhone: Phone,
+    deletedPhone: Phone,
+    updatedPhone: Phone
   }
 `
 var insertDemoData = function (model, data) {
@@ -128,7 +130,8 @@ const resolvers = {
   },
   Query: {
     Phones: async (_, args, { Phone }) => {
-      const phones = await Phone.find({}).limit(50)
+      const phones = await Phone.find({})
+      // .limit(50)
       return phones
     },
     searchPhones: async (_, { searchTerm }, { Phone }) => {
@@ -157,27 +160,22 @@ const resolvers = {
 
   },
   Mutation: {
-    loadDemoData: async (_, { }, { Phone }) => {
+    // eslint-disable-next-line no-empty-pattern
+    loadDemoData: async (_, {}, { Phone }) => {
       return await insertDemoData(Phone, data)
     },
 
     modifyPhone: async (_, { input }, { Phone }) => {
       if (input.id === '') {
-        let newPhone = []
-        await new Phone({
+        const res = await new Phone({
           phone: input.phone,
           name: input.name,
           address: input.address
         }).save()
-          .then((data) => {
-            newPhone = data
-            pubsub.publish('newPhone', { addedPhone: newPhone })
-            return newPhone
-          })
-        // return await Phone.find({})
-        return newPhone
+          .then(data => pubsub.publish('addedPhone', { addedPhone: data }))
+        return res
       } else {
-        const updatedPhone = await Phone.findOneAndUpdate({
+        const res = await Phone.findOneAndUpdate({
           _id: input.id
         }, {
           $set: {
@@ -187,26 +185,33 @@ const resolvers = {
           }
         }, {
           new: true
-        },
-        (err, res) => {
-          if (err) console.error(err)
         }
-        )
-        return updatedPhone
+        ).then(data => pubsub.publish('updatedPhone', { updatedPhone: data }))
+        return res
       }
     },
     deletePhone: async (_, { id }, { Phone }) => {
-      const deletedPhone = await Phone.findByIdAndRemove({
+      const res = await Phone.findByIdAndRemove({
         _id: id
-      })
-      return deletedPhone
+      }).then((data) => pubsub.publish('deletedPhone', { deletedPhone: data }))
+      return res
     }
 
   },
   Subscription: {
     addedPhone: {
       subscribe (_, args, { pubsub }) {
-        return pubsub.asyncIterator(['newPhone'])
+        return pubsub.asyncIterator(['addedPhone'])
+      }
+    },
+    updatedPhone: {
+      subscribe (_, args, { pubsub }) {
+        return pubsub.asyncIterator(['updatedPhone'])
+      }
+    },
+    deletedPhone: {
+      subscribe (_, args, { pubsub }) {
+        return pubsub.asyncIterator(['deletedPhone'])
       }
     }
   }
