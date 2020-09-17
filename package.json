@@ -12,12 +12,14 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
+    "apollo-link-ws": "^1.0.20",
     "apollo-server": "^2.17.0",
     "core-js": "^3.6.5",
     "graphql": "^15.3.0",
     "graphql-tag": "^2.11.0",
     "mongoose": "^5.10.3",
     "quasar": "^1.0.0",
+    "subscriptions-transport-ws": "^0.9.18",
     "vue-i18n": "^8.0.0"
   },
   "devDependencies": {

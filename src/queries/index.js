@@ -48,3 +48,13 @@ export const DELETE_PHONE = gql`
   }
   ${fragment}
 `
+export const PHONE_ADDED_SUBSCRIPTION = gql`
+  subscription {
+    addedPhone {
+       id
+       phone
+       name
+       address
+    }
+  }
+  `

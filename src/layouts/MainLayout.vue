@@ -74,7 +74,8 @@ import MyTable from 'components/MyTable'
 import {
   ALL_PHONES_QUERY,
   MODIFY_PHONE,
-  DELETE_PHONE
+  DELETE_PHONE,
+  PHONE_ADDED_SUBSCRIPTION
 } from 'src/queries'
 import bus from '../event-bus'
 export default {
@@ -219,8 +220,29 @@ export default {
     })
   },
   apollo: {
+    /*    $subscribe: {
+      Phones: {
+        query: PHONE_ADDED_SUBSCRIPTION,
+        result (data, key) {
+          console.log(data)
+        },
+        error (error) {
+          console.log(error)
+        }
+      }
+    }, */
     Phones: {
-      query: ALL_PHONES_QUERY
+      query: ALL_PHONES_QUERY,
+      subscribeToMore: {
+        document: PHONE_ADDED_SUBSCRIPTION,
+        updateQuery: (previousData, { subscriptionData }) => {
+          // console.log(subscriptionData)
+          return {
+            Phones: [...previousData.Phones, subscriptionData.data.addedPhone]
+          }
+        }
+      }
+
     }
   },
   computed: {

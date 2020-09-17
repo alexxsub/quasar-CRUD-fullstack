@@ -1,6 +1,7 @@
-const { ApolloServer, gql } = require('apollo-server')
+const { ApolloServer, gql, PubSub } = require('apollo-server')
 const mongoose = require('mongoose')
 const data = require('../data/demoData')
+const pubsub = new PubSub()
 const PhoneSchema = new mongoose.Schema({
   phone: {
     type: String,
@@ -28,14 +29,14 @@ PhoneSchema.pre('save', function (next) {
 })
 
 const Phone = mongoose.model('Phone', PhoneSchema)
-
+const MONGO_URI = 'mongodb://localhost:27017/PhoneBook'
 mongoose
-  .connect('mongodb://localhost:27017/PhoneBook', {
+  .connect(MONGO_URI, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false
   })
-  .then(() => console.log('🚀   База взлетела!'))
+  .then(() => console.log(`🚀   База взлетела ${MONGO_URI}`))
   .catch(err => console.error(err))
 
 // types for graphql
@@ -66,6 +67,7 @@ const typeDefs = gql`
     """
     address: String
   }
+  "input argument"
   input inputPhone {
     id:ID,
     phone: String!
@@ -73,9 +75,14 @@ const typeDefs = gql`
     address: String
   }
   type Mutation {
-    loadDemoData: String    
+    "Load demo data"
+    loadDemoData: String
+    "If id='' then add phone, else update"
     modifyPhone(input: inputPhone): Phone!
     deletePhone(id: ID): Phone
+  }
+  type Subscription {
+    addedPhone: Phone
   }
 `
 var insertDemoData = function (model, data) {
@@ -156,12 +163,19 @@ const resolvers = {
 
     modifyPhone: async (_, { input }, { Phone }) => {
       if (input.id === '') {
+        let newPhone = []
         await new Phone({
           phone: input.phone,
           name: input.name,
           address: input.address
         }).save()
-        return await Phone.find({})
+          .then((data) => {
+            newPhone = data
+            pubsub.publish('newPhone', { addedPhone: newPhone })
+            return newPhone
+          })
+        // return await Phone.find({})
+        return newPhone
       } else {
         const updatedPhone = await Phone.findOneAndUpdate({
           _id: input.id
@@ -188,6 +202,13 @@ const resolvers = {
       return deletedPhone
     }
 
+  },
+  Subscription: {
+    addedPhone: {
+      subscribe (_, args, { pubsub }) {
+        return pubsub.asyncIterator(['newPhone'])
+      }
+    }
   }
 }
 // create new Apollo server
@@ -195,7 +216,16 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: {
-    Phone
+    Phone,
+    pubsub
+  },
+  subscriptions: {
+    onConnect: (connectionParams, webSocket, context) => {
+      console.log('Подключился')
+    },
+    onDisconnect: (webSocket, context) => {
+      console.log('Отключился')
+    }
   }
 })
 // start it
@@ -206,8 +236,9 @@ server.listen({
   host: HOST,
   port: PORT
 }).then(({
-  url
+  url, subscriptionsUrl
 }) => {
-  console.log(`🚀   Взлетел ${url}`)
+  console.log(`🚀   Взлетел Apollo ${url}`)
+  console.log(`🚀   Подписка по адресу ${subscriptionsUrl}`)
 })
 // sudo ss -tulpn | grep :4000
