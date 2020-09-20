@@ -22,8 +22,8 @@
       :pagination.sync="pagination"
       :loading="loading"
       hide-pagination
-      no-data-label="Нет данных."
-      no-results-label = "Нет результатов для отображения."
+      :no-data-label="$t('nodata')"
+      :no-results-label = "$t('noresult')"
     >
      <template v-slot:header="props">
         <q-tr :props="props">

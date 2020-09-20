@@ -4,16 +4,21 @@
       <div class="row no-wrap shadow-1">
       <q-toolbar text-white  class="col-8">
         <q-toolbar-title>
-          Телефонный справочник
+          {{$t('title')}}
         </q-toolbar-title>
-
+       <q-select
+        dark
+        v-model="lang"
+        map-options
+        :options="langs"
+        />
        <q-input
        dark
        dense
        standout
        debounce="500"
-        placeholder="Поиск"
-        hide-bottom-space
+       :placeholder="$t('search')"
+       hide-bottom-space
        v-model="search"
        input-class="text-right"
        class="q-ml-md">
@@ -30,7 +35,6 @@
           padding="xs"
           color="primary"
           v-model = "drawerOpen"
-          @click="addItem"
           icon="add"
         />
       </q-toolbar>
@@ -49,7 +53,7 @@
       <q-toolbar-title>{{formTitle}}</q-toolbar-title>
       <q-btn dense
       color="secondary"
-      label="Сохранить"
+      :label="$t('save')"
       icon="save"
       class="q-mr-sm text-white"
       @click="btnSave"/>
@@ -60,7 +64,7 @@
     <q-page-container>
    <!--   <router-view /> -->
     <my-table
-    :columns="columns"
+    :columns="i18ncolumns"
     :data="Phones"
     :filter="search"
     ></my-table>
@@ -87,6 +91,17 @@ export default {
     return {
       drawerOpen: false,
       search: '',
+      lang: this.$i18n.locale,
+      langs: [
+        {
+          label: 'Русский',
+          value: 'ru'
+        },
+        {
+          label: 'English',
+          value: 'en-us'
+        }
+      ],
       editedItem: {
         id: '',
         phone: '',
@@ -98,33 +113,20 @@ export default {
         phone: '',
         name: '',
         address: ''
-      },
-      columns: [
-        // description columns
-        {
-          name: 'phone', // key
-          label: 'Телефон', // head label of column
-          align: 'left',
-          field: row => row.phone, // field in DB, simple like <field: 'phone'>
-          format: val => `${val}`, // change value
-          sortable: true // sortable
-        },
-        {
-          label: 'Имя',
-          align: 'left',
-          sortable: true,
-          field: 'name',
-          name: 'name'
-        },
-        {
-          name: 'actions',
-          label: '',
-          field: 'actions'
-        }
-      ]
+      }
     }
   },
-
+  watch: {
+    drawerOpen (val) {
+      if (!val) this.resetEditedItem()
+    },
+    lang (lang) {
+      this.$i18n.locale = lang.value
+      import('quasar/lang/' + lang.value).then(language => {
+        this.$q.lang.set(language.default)
+      })
+    }
+  },
   methods: {
     resetEditedItem () {
       this.editedItem = Object.assign({}, this.defaultItem)
@@ -133,20 +135,17 @@ export default {
     onEdited (item) {
       this.editedItem = Object.assign({}, item)
     },
-    addItem () {
-      this.resetEditedItem()
-    },
     editRecord (row) {
       this.editedItem = Object.assign({}, row)
       this.drawerOpen = true
     },
     deleteRecord (id) {
       this.$q.dialog({
-        title: 'Внимание!',
-        message: 'Удалить запись?',
+        title: this.$t('warning'),
+        message: this.$t('deleterecord'),
         focus: 'cancel',
-        ok: 'Да, я уверен',
-        cancel: 'Нет, не нужно'
+        ok: this.$t('yes'),
+        cancel: this.$t('no')
       }).onOk(() => {
         this.$apollo.mutate({
           mutation: DELETE_PHONE,
@@ -161,7 +160,7 @@ export default {
         })
           .then(data => {
             this.$q.notify({
-              message: 'Запись удалена',
+              message: this.$t('recorddeleted'),
               color: 'positive',
               icon: 'done'
 
@@ -193,14 +192,12 @@ export default {
         .then(data => {
           this.drawerOpen = false
           const message = this.editedItem.id === ''
-            ? 'Запись добавлена'
-            : 'Запись изменена'
-          this.editedItem = this.defaultItem
+            ? this.$t('recordadded')
+            : this.$t('recordupdated')
           this.$q.notify({
             message,
             color: 'positive',
             icon: 'done'
-
           })
         })
         .catch(error => {
@@ -217,7 +214,6 @@ export default {
     document.addEventListener('keydown', e => {
       if (e.keyCode === 27) {
         this.drawerOpen = false
-        this.resetEditedItem()
       }
     })
   },
@@ -261,10 +257,40 @@ export default {
     }
   },
   computed: {
+    i18ncolumns () {
+      // ш18
+      const columns = [
+        // description columns
+        {
+          name: 'phone', // key
+          label: this.$t('phone'), // head label of column
+          align: 'left',
+          field: row => row.phone, // field in DB, simple like <field: 'phone'>
+          format: val => `${val}`, // change value
+          sortable: true, // sortable
+          style: 'width: 40%'
+        },
+        {
+          label: this.$t('name'),
+          align: 'left',
+          sortable: true,
+          field: 'name',
+          name: 'name',
+          style: 'width: 40%'
+        },
+        {
+          name: 'actions',
+          label: '',
+          field: 'actions',
+          style: 'width: 20%'
+        }
+      ]
+      return columns
+    },
     formTitle () {
       return this.editedItem.id === ''
-        ? 'Добавить запись'
-        : 'Исправить запись'
+        ? this.$t('addrecord')
+        : this.$t('updaterecord')
     }
   },
   created () {
@@ -274,3 +300,5 @@ export default {
 }
 // https://forum.quasar-framework.org/topic/3996/how-to-use-data-from-apollo-client-as-data-source-of-qtable
 </script>
+<style>
+</style>

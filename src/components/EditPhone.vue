@@ -7,7 +7,7 @@
                        lazy-rules
                        :rules="[]"
                        @change = "onChange"
-                       label="Телефон">
+                       :label="$t('phone')">
                 <template v-slot:prepend>
                   <q-icon name="phone" />
                 </template>
@@ -19,7 +19,7 @@
                        lazy-rules
                        :rules="[]"
                        @change = "onChange"
-                       label="Имя">
+                       :label="$t('name')">
                 <template v-slot:prepend>
                   <q-icon name="person" />
                 </template>
@@ -33,7 +33,7 @@
                        @change = "onChange"
                        type="text"
                        autogrow
-                       label="Адрес">
+                       :label="$t('address')">
                 <template v-slot:prepend>
                   <q-icon name="email" />
                 </template>
@@ -61,19 +61,13 @@ export default {
       this.$emit('edited', this.editedItem)
     },
     setEditedItem (item) {
-      this.editedItem.id = item.id
-      this.editedItem.phone = item.phone
-      this.editedItem.name = item.name
-      this.editedItem.address = item.address
-    },
-    resetEditedItem (item) {
       this.editedItem = Object.assign({}, item)
     }
   },
   created () {
     // fire onClick record of table
     bus.$on('editRecord', this.setEditedItem)
-    bus.$on('resetRecord', this.resetEditedItem)
+    bus.$on('resetRecord', this.setEditedItem)
   }
 }
 </script>
