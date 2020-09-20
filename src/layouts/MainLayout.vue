@@ -100,6 +100,14 @@ export default {
         {
           label: 'English',
           value: 'en-us'
+        },
+        {
+          label: 'Français',
+          value: 'fr'
+        },
+        {
+          label: 'Deutsche',
+          value: 'de'
         }
       ],
       editedItem: {
