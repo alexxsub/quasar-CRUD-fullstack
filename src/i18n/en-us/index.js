@@ -1,5 +1,5 @@
 export default {
-  title: 'Phones book',
+  title: 'Phone book',
   warning: 'WARNING!',
   search: 'Search',
   save: 'Save',
