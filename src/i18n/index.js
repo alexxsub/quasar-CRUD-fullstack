@@ -1,11 +1,11 @@
 import enUS from './en-us'
-import ruRU from './ru'
-import frFR from './fr'
-import deDE from './de'
+import ru from './ru'
+import fr from './fr'
+import de from './de'
 
 export default {
   'en-us': enUS,
-  ru: ruRU,
-  fr: frFR,
-  de: deDE
+  ru,
+  fr,
+  de
 }
