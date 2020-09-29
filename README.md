@@ -41,6 +41,47 @@ npm run lint
 ```bash
 quasar build
 ```
+## Screens of features UI
+**Main table of records**
+<p float="left">
+        <kbd>
+<img src="screenshots/main.png" border="1" alt="Main screen"
+        title="Main screen"  />
+                </kbd>
+</p>
 
-### Customize the configuration
-See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
+**Add new record**
+<p float="left">
+	<kbd>
+<img src="screenshots/add_record.png" border="1" alt="Add record"
+	title="Add record"  />
+		</kbd>
+</p>
+
+**Update record**
+<p float="left">
+	<kbd>
+<img src="screenshots/update_record.png" border="1" alt="Update record"
+	title="Update record"  />
+		</kbd>
+</p>
+
+**Delete record**
+<p float="left">
+	<kbd>
+<img src="screenshots/delete_record.png" border="1" alt="Delete record"
+	title="Delete record"  />
+		</kbd>
+</p>
+
+**i18n Internationalization (4 languages:Russian,English,Deutsche,Français)**
+<p float="left">
+	<kbd>
+<img src="screenshots/i18n.png" border="1" alt="Internationalization"
+	title="Internationalization"  />
+		</kbd>
+</p>
+
+
+### Quasar Framework
+See [Quasar](https://quasar.dev).

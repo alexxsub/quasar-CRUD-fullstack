@@ -11,7 +11,7 @@
         v-model="lang"
         map-options
         :options="langs"
-        />
+        />lang
        <q-input
        dark
        dense
@@ -266,7 +266,7 @@ export default {
   },
   computed: {
     i18ncolumns () {
-      // ш18
+      // for i18n translate on-fly
       const columns = [
         // description columns
         {
