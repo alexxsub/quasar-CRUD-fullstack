@@ -25,7 +25,13 @@ app configured without login and password to MongoDB
 npm run server
 ```
 open url in browser to GraphQL playground [http://localhost:4000/graphql](http://localhost:4000/graphql)
-
+<br>
+Run query to load demo data. (russian names of persons)
+```bash
+mutation {
+ loadDemoData
+}
+```
 ### Start the SPA WEB interface in development mode (hot-code reloading, error reporting, etc.)
 ```bash
 quasar dev
