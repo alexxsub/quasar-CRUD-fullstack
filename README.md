@@ -1,9 +1,8 @@
-# <a href='https://www.apollographql.com/'><img src='https://user-images.githubusercontent.com/841294/53402609-b97a2180-39ba-11e9-8100-812bab86357c.png' height='100' alt='Apollo Server'></a>
-# <a href='https://www.quasar.dev/'><img src='https://cdn.quasar.dev/logo/svg/quasar-logo.svg' height='100' alt='Quasar framework'></a>
+# <a href='https://www.apollographql.com/'><img src='https://user-images.githubusercontent.com/841294/53402609-b97a2180-39ba-11e9-8100-812bab86357c.png' height='100' alt='Apollo Server'></a><a href='https://www.quasar.dev/'><img src='https://cdn.quasar.dev/logo/svg/quasar-logo.svg' height='100' alt='Quasar framework'></a>
 
 # Quasar CRUD fullstack SPA (phone book)
 
-Sample SPA with quasar framework and Apollo/GraphQL/MongoDB backend
+Sample SPA(Single Page Application) with quasar framework for frontend and Apollo/GraphQL/MongoDB backend
 
 ## Clone src on your PC
 ```bash
@@ -47,8 +46,9 @@ quasar build
 npm run web
 ```
 ## Demo
-**SAP supports subscribes features from Apollo server**
-Open 2,3,4 ... windows of SAP.  The results of any CRUD actions in one window will be displayed in anothers. WOW! Amazing? Simple! :)
+**App supports subscribes from Apollo server**
+
+# Open 2,3,4 ... windows of app.  The results of any CRUD actions in one window will be displayed in anothers. WOW! Amazing? Simple! :)
 
 ![Output sample](https://github.com/alexxsub/quasar-CRUD-fullstack/blob/master/screenshots/sub.gif)
 
