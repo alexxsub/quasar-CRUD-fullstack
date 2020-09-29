@@ -1,12 +1,13 @@
 {
   "name": "quasar_crud_fullstack",
   "version": "0.0.1",
-  "description": "Example APP with quasar framework and Apollo/GraphQL/MongoDB backend",
-  "productName": "Quasar CRUD fullstack APP",
+  "description": "Example SAP with quasar framework and Apollo/GraphQL/MongoDB backend",
+  "productName": "Quasar CRUD fullstack SAP",
   "author": "Alexx Sub alexei.s@list.ru",
   "private": true,
   "scripts": {
     "server": "nodemon './src/server/index.js' localhost 4000",
+    "web": "node './src/web_server.js'",
     "lint": "eslint --ext .js,.vue ./",
     "test": "echo \"No test specified\" && exit 0"
   },

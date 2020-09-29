@@ -43,7 +43,7 @@ export const MODIFY_PHONE = gql`
 export const DELETE_PHONE = gql`
   mutation($id: ID!) {
     deletePhone(id: $id) {
-    ...Phone
+      ...Phone
     }
   }
   ${fragment}

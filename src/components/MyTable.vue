@@ -92,7 +92,9 @@ export default {
   methods: {
     editItem (row) {
       event.stopPropagation()
-      this.editedItem = Object.assign({}, row)
+      Object.keys(this.editedItem).forEach(key => {
+        this.editedItem[key] = row[key]
+      })
       bus.$emit('editRecord', this.editedItem)
     },
     deleteItem (row) {

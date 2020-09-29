@@ -13,11 +13,14 @@ export default function (/* { app, router, store, ssrContext, urlPath, redirect 
 
       // 'apollo-cache-inmemory' config
       // https://www.apollographql.com/docs/react/caching/cache-configuration/#configuring-the-cache
-      cacheConfig: {},
+      cacheConfig: {
+
+      },
 
       // additional config for apollo client
       // https://github.com/apollographql/apollo-client/blob/version-2.6/docs/source/api/apollo-client.mdx#optional-fields
-      additionalConfig: {}
+      additionalConfig: {
+      }
     },
 
     // you can add more options or override the default config for a specific

@@ -37,10 +37,21 @@ quasar dev
 npm run lint
 ```
 
-### Build the app for production
+### Build the SPA for production
 ```bash
 quasar build
 ```
+
+### Start the SPA WEB interface from builded SPA (like production )
+```bash
+npm run web
+```
+## Demo
+**SAP supports subscribes features from Apollo server**
+Open 2,3,4 ... windows of SAP.  The results of any CRUD actions in one window will be displayed in anothers. WOW! Amazing? Simple! :)
+
+![Output sample](https://github.com/alexxsub/quasar-CRUD-fullstack/blob/master/screenshots/sub.gif)
+
 ## Screens of features UI
 **Main table of records**
 <p float="left">

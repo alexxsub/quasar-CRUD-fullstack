@@ -36,7 +36,7 @@ mongoose
     useCreateIndex: true,
     useFindAndModify: false
   })
-  .then(() => console.log(`🚀   База взлетела ${MONGO_URI}`))
+  .then(() => console.log(`🚀   BD started ${MONGO_URI}`))
   .catch(err => console.error(err))
 
 // types for graphql
@@ -226,10 +226,10 @@ const server = new ApolloServer({
   },
   subscriptions: {
     onConnect: (connectionParams, webSocket, context) => {
-      console.log('Подключился')
+      console.log('Connected')
     },
     onDisconnect: (webSocket, context) => {
-      console.log('Отключился')
+      console.log('Disconnected')
     }
   }
 })
@@ -243,7 +243,7 @@ server.listen({
 }).then(({
   url, subscriptionsUrl
 }) => {
-  console.log(`🚀   Взлетел Apollo ${url}`)
-  console.log(`🚀   Подписка по адресу ${subscriptionsUrl}`)
+  console.log(`🚀   Started Apollo ${url}`)
+  console.log(`🚀   Subscriptions on ${subscriptionsUrl}`)
 })
 // sudo ss -tulpn | grep :4000
