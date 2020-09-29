@@ -48,7 +48,7 @@ npm run web
 ## Demo
 **App supports subscribes from Apollo server**
 
-# Open 2,3,4 ... windows of app.  The results of any CRUD actions in one window will be displayed in anothers. WOW! Amazing? Simple! :)
+#### Open 2,3,4 ... windows of app.  The results of any CRUD actions in one window will be displayed in anothers. WOW! Amazing? Simple! :)
 
 ![Output sample](https://github.com/alexxsub/quasar-CRUD-fullstack/blob/master/screenshots/sub.gif)
 
