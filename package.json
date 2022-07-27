@@ -1,8 +1,8 @@
 {
   "name": "quasar_crud_fullstack",
   "version": "0.0.1",
-  "description": "Example SAP with quasar framework and Apollo/GraphQL/MongoDB backend",
-  "productName": "Quasar CRUD fullstack SAP",
+  "description": "Example SPA with quasar framework and Apollo/GraphQL/MongoDB backend",
+  "productName": "Quasar CRUD fullstack SPA",
   "author": "Alexx Sub alexei.s@list.ru",
   "private": true,
   "scripts": {
