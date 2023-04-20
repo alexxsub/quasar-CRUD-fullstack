@@ -6,7 +6,7 @@
   "author": "Alexx Sub alexei.s@list.ru",
   "private": true,
   "scripts": {
-    "server": "nodemon './src/server/index.js' localhost 4000",
+    "server": "nodemon './src/server/index.js' localhost 9000",
     "web": "node './src/web_server.js'",
     "lint": "eslint --ext .js,.vue ./",
     "test": "echo \"No test specified\" && exit 0"
@@ -18,7 +18,7 @@
     "core-js": "^3.6.5",
     "graphql": "^15.3.0",
     "graphql-tag": "^2.11.0",
-    "mongoose": "^5.10.3",
+    "mongoose": "^5.13.17",
     "quasar": "^1.0.0",
     "subscriptions-transport-ws": "^0.9.18",
     "vue-i18n": "^8.0.0"
@@ -36,7 +36,7 @@
     "eslint-plugin-quasar": "^1.0.0",
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^6.1.2",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.22"
   },
   "browserslist": [
     "last 10 Chrome versions",

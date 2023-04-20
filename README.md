@@ -24,7 +24,7 @@ app configured without login and password to MongoDB
 ```bash
 npm run server
 ```
-open url in browser to GraphQL playground [http://localhost:4000/graphql](http://localhost:4000/graphql)
+open url in browser to GraphQL playground [http://localhost:9000/graphql](http://localhost:9000/graphql)
 <br>
 Run query to load demo data. (russian names of persons)
 ```bash
